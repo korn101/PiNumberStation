@@ -1,4 +1,5 @@
 git add pifm
+git add gitPull.sh
 git add readme.md
 git add test.sh
 git add PiNS.py
