@@ -5,13 +5,18 @@ import math
 import time
 import wave
 
-buzzer_on = True
-message = ""
-
+# Turn on buzzer:
+buzzer_on = False
+# Message to synthesize and broadcast
+message = "1033 test 123"
+# Would you like to repeat the message infinitely? 
 repeat = True
 
+# Sounds for digits/numbers.
 sounds = ["zero.wav", "one.wav", "two.wav", "three.wav", "four.wav", "five.wav", "six.wav", "seven.wav", "eight.wav", "niner.wav"]
-		
+
+
+# Sounds for alphanumeric. Use NATO Phonetic
 alpha = ["alpha", "bravo", "charlie", "delta",  "echo", "foxtrot", "golf", 
 		"hotel", "india", "juliet", "kilo", "lima", "mike", "november", "oscar",
 		"papa", "quebec", "romeo", "sierra", "tango", "uniform", "victor",
