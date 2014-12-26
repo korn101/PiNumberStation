@@ -33,6 +33,7 @@ def main():
 	
 def playMessage():
 	
+	print("Broadcast Begin..")
 	subprocess.call(["sudo", "./pifm", "./message.wav"])
 	
 	return
@@ -52,6 +53,8 @@ def getVO( character ):
 		
 	
 def constructWav( strMessage ):
+	
+	print("Synthesizing Message..")
 	
 	infiles = []
 	
@@ -99,19 +102,22 @@ def constructWav( strMessage ):
 	#output.writeframes(data[2][1])
 	output.close()
 	
+	print("Synthesis Complete..")
+	
 	return
 	
 
 # START:
 main()
-#constructWav(message)
-print("Synthesizing Message..")
+
 constructWav(message)
-print("Synthesis Completed.. Broadcast Begin")
 if repeat == False:
 	playMessage()
 else:
 	while (1):
+		constructWav(message)
 		playMessage()
 
+#kill pifm because it doesn't kill itself, for some stupid reason.
+subprocess.call(["sudo", "killall", "pifm"])
 print("Done")
