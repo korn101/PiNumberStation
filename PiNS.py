@@ -5,11 +5,12 @@ import math
 import time
 import wave
 
-message = "korn101, github"
+buzzer_on = True
+message = ""
 
-sounds = ["zero.wav", "one.wav", "two.wav", 
-		"three.wav", "four.wav", "five.wav", 
-		"six.wav", "seven.wav", "eight.wav", "niner.wav"]
+repeat = True
+
+sounds = ["zero.wav", "one.wav", "two.wav", "three.wav", "four.wav", "five.wav", "six.wav", "seven.wav", "eight.wav", "niner.wav"]
 		
 alpha = ["alpha", "bravo", "charlie", "delta",  "echo", "foxtrot", "golf", 
 		"hotel", "india", "juliet", "kilo", "lima", "mike", "november", "oscar",
@@ -42,7 +43,7 @@ def getVO( character ):
 		
 		
 		if character.isalpha() == True:
-			return "/alpha/" + str(alpha[ord(character) - 97] + ".wav")
+			return "/alpha/" + str(alpha[ord(character) - ord('a')] + ".wav")
 		
 	
 def constructWav( strMessage ):
@@ -60,11 +61,14 @@ def constructWav( strMessage ):
 	# determine infiles for message.
 	i=0
 	infiles.append("./vo/on1.wav")
-	infiles.append("./vo/misc/buzzer.wav")
-	
+	if buzzer_on == True:
+		infiles.append("./vo/misc/buzzer.wav")
+	else:
+		infiles.append("./vo/_comma.wav")	
+
 	for character in strMessage:
 		infiles.append("./vo/" + getVO(character))
-		print(infiles[i])
+		print(infiles[i+2])
 		i = i + 1
 		
 	infiles.append("./vo/off2.wav")
@@ -99,5 +103,10 @@ main()
 print("Synthesizing Message..")
 constructWav(message)
 print("Synthesis Completed.. Broadcast Begin")
-playMessage()
+if repeat == False:
+	playMessage()
+else:
+	while (1):
+		playMessage()
+
 print("Done")
