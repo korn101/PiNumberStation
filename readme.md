@@ -29,3 +29,4 @@ The end result is a basic and very small FM Number Station. See: http://en.wikip
 * Uppercase support
 * Unload pifm process
 * Change frequencies
+* Morsecode Synthesis
