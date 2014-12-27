@@ -12,6 +12,8 @@ message = "1033 test 123"
 # Would you like to repeat the message infinitely? 
 repeat = True
 
+loadFromFile = True
+
 # Sounds for digits/numbers.
 sounds = ["zero.wav", "one.wav", "two.wav", "three.wav", "four.wav", "five.wav", "six.wav", "seven.wav", "eight.wav", "niner.wav"]
 
@@ -31,6 +33,13 @@ def main():
 	'''
 	return
 	
+def constructWavFromFile( fileName):
+	fMsg = open(fileName, 'r')
+	strMessage = fMsg.read()
+	constructWav( strMessage )
+	
+	return
+	
 def playMessage():
 	
 	print("Broadcast Begin..")
@@ -46,6 +55,8 @@ def getVO( character ):
 			return "_comma.wav"
 		if character == '.':
 			return "_period.wav"
+		if character == '\n':
+			return "nova.wav"
 		
 		
 		if character.isalpha() == True:
@@ -110,12 +121,20 @@ def constructWav( strMessage ):
 # START:
 main()
 
-constructWav(message)
+if (loadFromFile == False):
+	constructWav(message)
+else:
+	constructWavFromFile("message.txt")
+	
 if repeat == False:
 	playMessage()
 else:
 	while (1):
-		constructWav(message)
+		if (loadFromFile == False):
+			constructWav(message)
+		else:
+			constructWavFromFile("message.txt")
+		
 		playMessage()
 
 #kill pifm because it doesn't kill itself, for some stupid reason.
