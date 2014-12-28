@@ -20,6 +20,16 @@ The end result is a basic and very small FM Number Station. See: http://en.wikip
   * message - The message you want to play, all in lowercase.
 * To begin transmitting message: sudo python PiNS.py
 
+**Important:**
+Due to copyright and filesize reasons, no voice/speech files are present. Loading these files is easy.
+Important to note is the files **must be 16-bit Mono WAV** files. With a file structure such that:
+
+> The folder "vo" contains sub-folders: "misc" and "alpha".
+> * where misc contains buzzer.wav
+> * where alpha containts alpha.wav, bravo.wav, etc.
+ 
+* For NATO Phonetic, I would suggest: https://www.freesound.org/people/Corsica_S/packs/14153/
+
 #Developer Notes:
 * To push new changes: Run ./gitUpdate.sh
 * To pull latest version: Run ./gitPull.sh
