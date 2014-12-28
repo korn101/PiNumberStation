@@ -6,13 +6,14 @@ import time
 import wave
 
 # Turn on buzzer:
-buzzer_on = False
+buzzer_on = True
 # Message to synthesize and broadcast
-message = "1033 test 123"
+message = "test 123"
 # Would you like to repeat the message infinitely? 
 repeat = True
 
 loadFromFile = True
+freq = "103.3"
 
 # Sounds for digits/numbers.
 sounds = ["zero.wav", "one.wav", "two.wav", "three.wav", "four.wav", "five.wav", "six.wav", "seven.wav", "eight.wav", "niner.wav"]
@@ -43,7 +44,7 @@ def constructWavFromFile( fileName):
 def playMessage():
 	
 	print("Broadcast Begin..")
-	subprocess.call(["sudo", "./pifm", "./message.wav"])
+	subprocess.call(["sudo", "./pifm", "./message.wav", freq])
 	
 	return
 	
