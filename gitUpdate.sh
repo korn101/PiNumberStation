@@ -1,5 +1,5 @@
 git add pifm
-git add misc
+git add vo/misc/
 git add gitPull.sh
 git add readme.md
 git add test.sh
