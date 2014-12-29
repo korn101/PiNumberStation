@@ -36,6 +36,7 @@ def main():
 	import os.path
 	if (os.path.isfile("./vo/alpha/alpha.wav") == False):
 		print("Synthesis Failure: NO ALPHANUMERIC SUPPORT")
+		time.sleep(5)
 
 	return
 	
