@@ -1,5 +1,4 @@
 git add pifm
-git add vo/misc/buzzer.wav
 git add gitPull.sh
 git add readme.md
 git add test.sh
