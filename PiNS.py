@@ -32,6 +32,11 @@ def main():
 	for x in range(0, len(message)):
 		print(str(message[x]))
 	'''
+
+	import os.path
+	if (os.path.isfile("./vo/alpha/alpha.wav") == False):
+		print("Synthesis Failure: NO ALPHANUMERIC SUPPORT")
+
 	return
 	
 def constructWavFromFile( fileName):
