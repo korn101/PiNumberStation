@@ -4,6 +4,7 @@ import subprocess # for calling console
 import math
 import time
 import wave
+import sys
 
 
 
@@ -18,7 +19,7 @@ message = "test 123"
 repeat = True
 
 loadFromFile = True
-freq = "103.3"
+freq = "103.3" #default frequency, will change if run with arguments.
 
 # Sounds for digits/numbers.
 sounds = ["zero.wav", "one.wav", "two.wav", "three.wav", "four.wav", "five.wav", "six.wav", "seven.wav", "eight.wav", "nine.wav"]
@@ -30,6 +31,13 @@ alpha = ["alpha", "bravo", "charlie", "delta",  "echo", "foxtrot", "golf",
 		"papa", "quebec", "romeo", "sierra", "tango", "uniform", "victor",
 		"whiskey", "x-ray", "yankee", "zulu"]
 
+
+if (len(sys.argv) > 1):
+	# if arguments present
+	freq = sys.argv[1]
+	print("Broadcast on " + str(freq))
+
+
 def main():
 	
 	print("PiNumberStation started...")
@@ -39,14 +47,14 @@ def main():
 	'''
 
 	import os.path
-	if (os.path.isfile("./vo/alpha/alpha.wav") == False):
+	if (os.path.isfile(sys.path[0] + "/vo/alpha/alpha.wav") == False):
 		print("Synthesis Failure: NO ALPHANUMERIC SUPPORT")
 		time.sleep(5)
 
 	return
 	
 def constructWavFromFile( fileName):
-	fMsg = open(fileName, 'r')
+	fMsg = open(sys.path[0] + "/" + fileName, 'r')
 	strMessage = fMsg.read()
 	constructWav( strMessage )
 	
@@ -55,7 +63,8 @@ def constructWavFromFile( fileName):
 def playMessage():
 	
 	print("Broadcast Begin..")
-	subprocess.call(["sudo", "./pifm", "./message.wav", freq])
+
+	subprocess.call(["sudo", sys.path[0] + "/pifm", sys.path[0] + "/message.wav", freq])
 	
 	return
 	
@@ -94,26 +103,26 @@ def constructWav( strMessage ):
 	if buzzer_number > 0:
 		j=0
 		while (j < buzzer_number):
-			infiles.append("./vo/misc/buzzer.wav")
+			infiles.append(sys.path[0] +"/vo/misc/buzzer.wav")
 			j=j+1
 	else:
-		infiles.append("./vo/_comma.wav")	
+		infiles.append(sys.path[0] + "/vo/_comma.wav")	
 
-	infiles.append("./vo/on3.wav")
+	infiles.append(sys.path[0] + "/vo/on3.wav")
 
 	if monolith_on == True:
-		infiles.append("./vo/misc/monolith.wav")
+		infiles.append(sys.path[0] + "/vo/misc/monolith.wav")
 
 	for character in strMessage:
-		infiles.append("./vo/" + getVO(character))
+		infiles.append(sys.path[0] + "/vo/" + getVO(character))
 		print(infiles[i+2])
 		i = i + 1
 		
-	infiles.append("./vo/off3.wav")
+	infiles.append(sys.path[0] + "/vo/off3.wav")
 	
 	#infiles = ["sound_1.wav", "sound_2.wav"]
 	
-	outfile = "message.wav"
+	outfile = sys.path[0] + "/message.wav"
 	
 	data= []
 	for infile in infiles:
