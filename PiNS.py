@@ -6,15 +6,13 @@ import time
 import wave
 import sys
 
-
-
 # Turn on buzzer:
 buzzer_number = 4
 
 monolith_on = True
 
 # Message to synthesize and broadcast
-message = "test 123"
+message = "123456789 abcdefghijklmnopqrstuvwxyz"
 # Would you like to repeat the message infinitely? 
 repeat = True
 
