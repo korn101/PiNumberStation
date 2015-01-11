@@ -5,8 +5,13 @@ import math
 import time
 import wave
 
+
+
 # Turn on buzzer:
-buzzer_on = True
+buzzer_number = 4
+
+monolith_on = True
+
 # Message to synthesize and broadcast
 message = "test 123"
 # Would you like to repeat the message infinitely? 
@@ -16,7 +21,7 @@ loadFromFile = True
 freq = "103.3"
 
 # Sounds for digits/numbers.
-sounds = ["zero.wav", "one.wav", "two.wav", "three.wav", "four.wav", "five.wav", "six.wav", "seven.wav", "eight.wav", "niner.wav"]
+sounds = ["zero.wav", "one.wav", "two.wav", "three.wav", "four.wav", "five.wav", "six.wav", "seven.wav", "eight.wav", "nine.wav"]
 
 
 # Sounds for alphanumeric. Use NATO Phonetic
@@ -86,18 +91,25 @@ def constructWav( strMessage ):
 	
 	# determine infiles for message.
 	i=0
-	infiles.append("./vo/on1.wav")
-	if buzzer_on == True:
-		infiles.append("./vo/misc/buzzer.wav")
+	if buzzer_number > 0:
+		j=0
+		while (j < buzzer_number):
+			infiles.append("./vo/misc/buzzer.wav")
+			j=j+1
 	else:
 		infiles.append("./vo/_comma.wav")	
+
+	infiles.append("./vo/on3.wav")
+
+	if monolith_on == True:
+		infiles.append("./vo/misc/monolith.wav")
 
 	for character in strMessage:
 		infiles.append("./vo/" + getVO(character))
 		print(infiles[i+2])
 		i = i + 1
 		
-	infiles.append("./vo/off2.wav")
+	infiles.append("./vo/off3.wav")
 	
 	#infiles = ["sound_1.wav", "sound_2.wav"]
 	
