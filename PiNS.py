@@ -5,6 +5,11 @@ import math
 import time
 import wave
 import sys
+import random
+
+#from encryption import encrypt, decrypt
+#enable_encryption = False
+#encKey = 0
 
 # Turn on buzzer:
 buzzer_number = 4
@@ -88,6 +93,13 @@ def constructWav( strMessage ):
 	
 	infiles = []
 	
+	#if enable_encryption == True:
+	#	strMessageOut = encrypt(strMessage, encKey)
+	#else:
+	#	strMessageOut = strMessage
+	
+	strMessageOut = strMessage
+	
 	'''
 	import audiolab, scipy
 	a, fs, enc = audiolab.wavread('file1.wav')
@@ -111,7 +123,7 @@ def constructWav( strMessage ):
 	if monolith_on == True:
 		infiles.append(sys.path[0] + "/vo/misc/monolith.wav")
 
-	for character in strMessage:
+	for character in strMessageOut:
 		infiles.append(sys.path[0] + "/vo/" + getVO(character))
 		print(infiles[i+2])
 		i = i + 1
