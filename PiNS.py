@@ -14,7 +14,7 @@ import random
 # Turn on buzzer:
 buzzer_number = 4
 
-monolith_on = True
+monolith_on = False
 
 # Message to synthesize and broadcast
 message = "123456789 abcdefghijklmnopqrstuvwxyz"
@@ -172,8 +172,9 @@ else:
 			constructWav(message)
 		else:
 			constructWavFromFile("message.txt")
-		
+		print("Construction Complete..")
 		playMessage()
+		print("Playing..")
 
 #kill pifm because it doesn't kill itself, for some stupid reason.
 subprocess.call(["sudo", "killall", "pifm"])
