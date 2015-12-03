@@ -17,7 +17,7 @@ buzzer_number = 4
 monolith_on = False
 
 # Give the pifm extension executable rights.
-subprocess.call(["sudo chmod +x pifm"])
+subprocess.call(["sudo", "chmod", "+x", "pifm"])
 
 # Message to synthesize and broadcast
 message = "123456789 abcdefghijklmnopqrstuvwxyz"
