@@ -16,23 +16,27 @@ buzzer_number = 4
 
 monolith_on = False
 
+# Use "pifm" (works only with raspberry pi 1)
+# Use "fm_transmitter" (works on raspberry pi 2, and SHOULD be works pi 3 too)
+transmitter_binary = "fm_transmitter"
+
 # Give the pifm extension executable rights.
-subprocess.call(["sudo", "chmod", "+x", "pifm"])
+subprocess.call(["sudo", "chmod", "+x", transmitter_binary])
 
 # Message to synthesize and broadcast
 message = "123456789 abcdefghijklmnopqrstuvwxyz"
-# Would you like to repeat the message infinitely? 
+# Would you like to repeat the message infinitely?
 repeat = True
 
 loadFromFile = True
-freq = "103.3" #default frequency, will change if run with arguments.
+freq = "10464.3" #default frequency, will change if run with arguments.
 
 # Sounds for digits/numbers.
 sounds = ["zero.wav", "one.wav", "two.wav", "three.wav", "four.wav", "five.wav", "six.wav", "seven.wav", "eight.wav", "nine.wav"]
 
 
 # Sounds for alphanumeric. Use NATO Phonetic
-alpha = ["alpha", "bravo", "charlie", "delta",  "echo", "foxtrot", "golf", 
+alpha = ["alpha", "bravo", "charlie", "delta",  "echo", "foxtrot", "golf",
 		"hotel", "india", "juliet", "kilo", "lima", "mike", "november", "oscar",
 		"papa", "quebec", "romeo", "sierra", "tango", "uniform", "victor",
 		"whiskey", "x-ray", "yankee", "zulu"]
@@ -45,7 +49,7 @@ if (len(sys.argv) > 1):
 
 
 def main():
-	
+
 	print("PiNumberStation started...")
 	'''
 	for x in range(0, len(message)):
@@ -58,22 +62,25 @@ def main():
 		time.sleep(5)
 
 	return
-	
+
 def constructWavFromFile( fileName):
 	fMsg = open(sys.path[0] + "/" + fileName, 'r')
 	strMessage = fMsg.read()
 	constructWav( strMessage )
-	
+
 	return
-	
+
 def playMessage():
-	
+
 	print("Broadcast Begin..")
 
-	subprocess.call(["sudo", sys.path[0] + "/pifm", sys.path[0] + "/message.wav", freq])
-	
+	if transmitter_binary == "pifm":
+		subprocess.call(["sudo", sys.path[0] + "/pifm", sys.path[0] + "/message.wav", freq])
+	else:
+		subprocess.call(["sudo", sys.path[0] + "/" + transmitter_binary, "-f", freq, sys.path[0] + "/message.wav"])
+
 	return
-	
+
 def getVO( character ):
 	if character.isdigit() == True:
 		return sounds[int(character)]
@@ -84,25 +91,25 @@ def getVO( character ):
 			return "_period.wav"
 		if character == '\n':
 			return "nova.wav"
-		
-		
+
+
 		if character.isalpha() == True:
 			return "/alpha/" + str(alpha[ord(character) - ord('a')] + ".wav")
-		
-	
+
+
 def constructWav( strMessage ):
-	
+
 	print("Synthesizing Message..")
-	
+
 	infiles = []
-	
+
 	#if enable_encryption == True:
 	#	strMessageOut = encrypt(strMessage, encKey)
 	#else:
 	#	strMessageOut = strMessage
-	
+
 	strMessageOut = strMessage
-	
+
 	'''
 	import audiolab, scipy
 	a, fs, enc = audiolab.wavread('file1.wav')
@@ -110,7 +117,7 @@ def constructWav( strMessage ):
 	c = scipy.vstack((a,b))
 	audiolab.wavwrite(c, 'file3.wav', fs, enc)
 	'''
-	
+
 	# determine infiles for message.
 	i=0
 	if buzzer_number > 0:
@@ -119,7 +126,7 @@ def constructWav( strMessage ):
 			infiles.append(sys.path[0] +"/vo/misc/buzzer.wav")
 			j=j+1
 	else:
-		infiles.append(sys.path[0] + "/vo/_comma.wav")	
+		infiles.append(sys.path[0] + "/vo/_comma.wav")
 
 	infiles.append(sys.path[0] + "/vo/on3.wav")
 
@@ -130,13 +137,13 @@ def constructWav( strMessage ):
 		infiles.append(sys.path[0] + "/vo/" + getVO(character))
 		print(infiles[i+2])
 		i = i + 1
-		
+
 	infiles.append(sys.path[0] + "/vo/off3.wav")
-	
+
 	#infiles = ["sound_1.wav", "sound_2.wav"]
-	
+
 	outfile = sys.path[0] + "/message.wav"
-	
+
 	data= []
 	for infile in infiles:
 	    w = wave.open(infile, 'rb')
@@ -145,19 +152,19 @@ def constructWav( strMessage ):
 
 	output = wave.open(outfile, 'wb')
 	output.setparams(data[0][0])
-	
+
 	for x in range(0, len(infiles)):
 		output.writeframes(data[x][1])
-	
+
 	#output.writeframes(data[0][1])
 	#output.writeframes(data[1][1])
 	#output.writeframes(data[2][1])
 	output.close()
-	
+
 	print("Synthesis Complete..")
-	
+
 	return
-	
+
 
 # START:
 main()
@@ -166,7 +173,7 @@ if (loadFromFile == False):
 	constructWav(message)
 else:
 	constructWavFromFile("message.txt")
-	
+
 if repeat == False:
 	playMessage()
 else:
@@ -180,5 +187,6 @@ else:
 		print("Playing..")
 
 #kill pifm because it doesn't kill itself, for some stupid reason.
-subprocess.call(["sudo", "killall", "pifm"])
+subprocess.call(["sudo", "killall", transmitter_binary])
 print("Done")
+
