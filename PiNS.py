@@ -11,27 +11,34 @@ import random
 #enable_encryption = False
 #encKey = 0
 
-# Turn on buzzer:
-buzzer_number = 4
 
-monolith_on = False
+configFile = "default.ini"
+if (len(sys.argv) > 1):
+	# if arguments present
+	configFile = sys.argv[1]
 
-# Use "pifm" (works only with raspberry pi 1)
-# Use "fm_transmitter" (works on raspberry pi 2, and SHOULD be works pi 3 too)
-transmitter_binary = "fm_transmitter"
+import ConfigParser
+from re import search as re_search
+
+# from CLI
+# FUTURE: --config
+config = ConfigParser.ConfigParser()
+config.read(configFile)
+
+buzzer_number                 = config.getint('buzzer', 'times') or 4
+monolith_on                   = config.getboolean('monolith', 'enabled') or False
+transmitter_binary            = config.get('transmitter', 'binary') or "fm_transmitter"
+repeat                        = config.get('repeat', 'enabled') or True
+repeat_interval_break_seconds = config.getint('repeat', 'delay') or 5
+freq                          = config.get('general', 'freq') or "10464.3"
+
 
 # Give the pifm extension executable rights.
 subprocess.call(["sudo", "chmod", "+x", transmitter_binary])
 
 # Message to synthesize and broadcast
 message = "123456789 abcdefghijklmnopqrstuvwxyz"
-# Would you like to repeat the message infinitely?
-repeat = True
-
-repeat_interval_break_seconds = 5
-
 loadFromFile = True
-freq = "10464.3" #default frequency, will change if run with arguments.
 
 # Sounds for digits/numbers.
 sounds = ["zero.wav", "one.wav", "two.wav", "three.wav", "four.wav", "five.wav", "six.wav", "seven.wav", "eight.wav", "nine.wav"]
@@ -44,15 +51,10 @@ alpha = ["alpha", "bravo", "charlie", "delta",  "echo", "foxtrot", "golf",
 		"whiskey", "x-ray", "yankee", "zulu"]
 
 
-if (len(sys.argv) > 1):
-	# if arguments present
-	freq = sys.argv[1]
-	print("Broadcast on " + str(freq))
-
-
 def main():
 
 	print("PiNumberStation started...")
+	print("Broadcast on " + str(freq))
 	'''
 	for x in range(0, len(message)):
 		print(str(message[x]))
@@ -179,7 +181,11 @@ else:
 if repeat == False:
 	playMessage()
 else:
-	loop = True if repeat == True else int(repeat)
+	# Numeric
+	if re_search('/^d+$/', repeat):
+		loop = int(repeat)
+	else:
+		loop = bool(repeat)
 
 	while (loop):
 
