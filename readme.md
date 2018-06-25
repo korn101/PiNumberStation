@@ -13,6 +13,7 @@ The end result is a basic and very small FM Number Station. See: http://en.wikip
 * cd PiNumberStation
 * sudo nano PiNS.py
 * Change desired parameters in PiNS.py:
+  * transmitter_binary - Binary file for FM transmission. For pi2 and pi3 use fm_transmitter instead pifm (pifm/fn_transmitter)
   * repeat - whether to repeat the broadcast forever (True/False)
   * buzzer_on - play the buzzer (if you don't know what this is, leave it False.)
   * message - The message you want to play, all in lowercase.
