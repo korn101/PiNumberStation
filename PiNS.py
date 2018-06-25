@@ -17,6 +17,9 @@ if (len(sys.argv) > 1):
 	# if arguments present
 	configFile = sys.argv[1]
 
+	if not configFile.endswith(".ini"):
+		configFile = configFile + ".ini"
+
 import ConfigParser
 from re import search as re_search
 
