@@ -21,8 +21,12 @@ subprocess.call(["sudo", "chmod", "+x", "pifm"])
 
 # Message to synthesize and broadcast
 message = "123456789 abcdefghijklmnopqrstuvwxyz"
-# Would you like to repeat the message infinitely? 
+
+# repeat = True    (infinite)
+# repeat = integer (repeat only for n° times)
 repeat = True
+
+repeat_interval_break_seconds = 5
 
 loadFromFile = True
 freq = "103.3" #default frequency, will change if run with arguments.
@@ -170,14 +174,29 @@ else:
 if repeat == False:
 	playMessage()
 else:
-	while (1):
+	loop = True if repeat == True else int(repeat)
+
+	while (loop):
+
 		if (loadFromFile == False):
 			constructWav(message)
 		else:
 			constructWavFromFile("message.txt")
 		print("Construction Complete..")
+
+		print("\t Playing..")
 		playMessage()
-		print("Playing..")
+
+		if repeat_interval_break_seconds > 0:
+			print "Sleep ", repeat_interval_break_seconds, " secs ..."
+			time.sleep(repeat_interval_break_seconds)
+
+		if type(repeat) != type(True):
+			loop -= 1
+
+			if loop <= 0:
+				break
+
 
 #kill pifm because it doesn't kill itself, for some stupid reason.
 subprocess.call(["sudo", "killall", "pifm"])
