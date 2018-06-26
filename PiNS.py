@@ -130,8 +130,6 @@ def constructWav( strMessage ):
 			file = sys.path[0] + "/" + file
 		infiles.append(file)
 
-	infiles.append(sys.path[0] + "/vo/on3.wav")
-
 	for character in strMessageOut:
 		infiles.append(sys.path[0] + "/vo/" + getVO(character))
 		print(infiles[i+2])
