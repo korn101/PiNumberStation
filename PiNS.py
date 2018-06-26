@@ -6,10 +6,7 @@ import time
 import wave
 import sys
 import random
-
-#from encryption import encrypt, decrypt
-#enable_encryption = False
-#encKey = 0
+import ConfigParser
 
 
 configFile = "default.ini"
@@ -20,13 +17,9 @@ if (len(sys.argv) > 1):
 	if not configFile.endswith(".ini"):
 		configFile = configFile + ".ini"
 
-import ConfigParser
-from re import search as re_search
-
-# from CLI
-# FUTURE: --config
 config = ConfigParser.ConfigParser()
 config.read(configFile)
+
 
 buzzer_number                 = config.getint('buzzer', 'times')
 monolith_on                   = config.getboolean('monolith', 'enabled')
