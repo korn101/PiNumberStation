@@ -24,11 +24,14 @@ config.read(configFile)
 buzzer_number                 = config.getint('buzzer', 'times')
 monolith_on                   = config.getboolean('monolith', 'enabled')
 transmitter_binary            = config.get('transmitter', 'binary')
-repeat 						  = True
+repeat                        = True
 repeat_infinite               = config.getboolean('repeat', 'infinite')
 repeat_counter                = config.getint('repeat', 'exit_after')
 repeat_interval_break_seconds = config.getint('repeat', 'delay')
 freq                          = config.get('general', 'freq')
+
+audio_prepend                 = config.get('audio', 'prepend')
+audio_append                  = config.get('audio', 'append')
 
 
 # Give the pifm extension executable rights.
@@ -122,31 +125,29 @@ def constructWav( strMessage ):
 
 	# determine infiles for message.
 	i=0
-	if buzzer_number > 0:
-		j=0
-		while (j < buzzer_number):
-			infiles.append(sys.path[0] +"/vo/misc/buzzer.wav")
-			j=j+1
-	else:
-		infiles.append(sys.path[0] + "/vo/_comma.wav")
+	for file in audio_prepend.split(","):
+		if not file[0] == "/" or not file[0] == ".":
+			file = sys.path[0] + "/" + file
+		infiles.append(file)
 
 	infiles.append(sys.path[0] + "/vo/on3.wav")
-
-	if monolith_on == True:
-		infiles.append(sys.path[0] + "/vo/misc/monolith.wav")
 
 	for character in strMessageOut:
 		infiles.append(sys.path[0] + "/vo/" + getVO(character))
 		print(infiles[i+2])
 		i = i + 1
 
+
+	for file in audio_append.split(","):
+		if not file[0] == "/" or not file[0] == ".":
+			file = sys.path[0] + "/" + file
+		infiles.append(file)
+
 	infiles.append(sys.path[0] + "/vo/off3.wav")
 
-	#infiles = ["sound_1.wav", "sound_2.wav"]
-
 	outfile = sys.path[0] + "/message.wav"
+	data    = []
 
-	data= []
 	for infile in infiles:
 	    w = wave.open(infile, 'rb')
 	    data.append( [w.getparams(), w.readframes(w.getnframes())] )
