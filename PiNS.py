@@ -171,34 +171,26 @@ def constructWav( strMessage ):
 # START:
 main()
 
-if (loadFromFile == False):
-	constructWav(message)
-else:
-	constructWavFromFile("message.txt")
+while (True):
+	if (loadFromFile == False):
+		constructWav(message)
+	else:
+		constructWavFromFile("message.txt")
 
-print("Construction Complete..")
-print("\t Playing..")
+	print "Construction Complete.."
 
-if repeat == False:
+	print "Playing ..."
 	playMessage()
-else:
-	while (True):
 
-		if (loadFromFile == False):
-			constructWav(message)
-		else:
-			constructWavFromFile("message.txt")
-		playMessage()
+	if not repeat_infinite:
+		repeat_counter -= 1
 
-		if not repeat_infinite:
-			repeat_counter -= 1
+		if repeat_counter <= 0:
+			break
 
-			if repeat_counter <= 0:
-				break
-
-		if repeat_interval_break_seconds > 0:
-			print "Sleep ", repeat_interval_break_seconds, " secs ..."
-			time.sleep(repeat_interval_break_seconds)
+	if repeat_interval_break_seconds > 0:
+		print "Sleep ", repeat_interval_break_seconds, " secs ..."
+		time.sleep(repeat_interval_break_seconds)
 
 #kill pifm because it doesn't kill itself, for some stupid reason.
 subprocess.call(["sudo", "killall", transmitter_binary])
