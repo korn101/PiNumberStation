@@ -28,12 +28,14 @@ from re import search as re_search
 config = ConfigParser.ConfigParser()
 config.read(configFile)
 
-buzzer_number                 = config.getint('buzzer', 'times') or 4
-monolith_on                   = config.getboolean('monolith', 'enabled') or False
-transmitter_binary            = config.get('transmitter', 'binary') or "fm_transmitter"
-repeat                        = config.get('repeat', 'enabled') or True
-repeat_interval_break_seconds = config.getint('repeat', 'delay') or 5
-freq                          = config.get('general', 'freq') or "10464.3"
+buzzer_number                 = config.getint('buzzer', 'times')
+monolith_on                   = config.getboolean('monolith', 'enabled')
+transmitter_binary            = config.get('transmitter', 'binary')
+repeat 						  = True
+repeat_infinite               = config.getboolean('repeat', 'infinite')
+repeat_counter                = config.getint('repeat', 'exit_after')
+repeat_interval_break_seconds = config.getint('repeat', 'delay')
+freq                          = config.get('general', 'freq')
 
 
 # Give the pifm extension executable rights.
@@ -181,36 +183,29 @@ if (loadFromFile == False):
 else:
 	constructWavFromFile("message.txt")
 
+print("Construction Complete..")
+print("\t Playing..")
+
 if repeat == False:
 	playMessage()
 else:
-	# Numeric
-	if re_search('/^d+$/', repeat):
-		loop = int(repeat)
-	else:
-		loop = bool(repeat)
-
-	while (loop):
+	while (True):
 
 		if (loadFromFile == False):
 			constructWav(message)
 		else:
 			constructWavFromFile("message.txt")
-		print("Construction Complete..")
-
-		print("\t Playing..")
 		playMessage()
+
+		if not repeat_infinite:
+			repeat_counter -= 1
+
+			if repeat_counter <= 0:
+				break
 
 		if repeat_interval_break_seconds > 0:
 			print "Sleep ", repeat_interval_break_seconds, " secs ..."
 			time.sleep(repeat_interval_break_seconds)
-
-		if type(repeat) != type(True):
-			loop -= 1
-
-			if loop <= 0:
-				break
-
 
 #kill pifm because it doesn't kill itself, for some stupid reason.
 subprocess.call(["sudo", "killall", transmitter_binary])
