@@ -127,20 +127,20 @@ def constructWav( strMessage ):
 	'''
 
 	# determine infiles for message.
-	i=0
+
 	for file in audio_prepend.split(","):
 		if not file[0] == "/" or not file[0] == ".":
 			file = sys.path[0] + "/" + file
 
-	for character in strMessageOut:
-		infiles.append(sys.path[0] + "/vo/" + getVO(character))
-		print(infiles[i+2])
-		i = i + 1
 		if os.path.exists(file):
 			infiles.append(file)
 		else:
 			print  "File %s not exists ... skipped!" % file
 
+	for character in strMessageOut:
+		char_sound = sys.path[0] + "/vo/" + getVO(character)
+		infiles.append(char_sound)
+		print char_sound
 
 	for file in audio_append.split(","):
 		if not file[0] == "/" or not file[0] == ".":
