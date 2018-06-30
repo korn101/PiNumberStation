@@ -6,6 +6,8 @@ import time
 import wave
 import sys
 import random
+
+import os.path
 import ConfigParser
 
 
@@ -61,7 +63,6 @@ def main():
 		print(str(message[x]))
 	'''
 
-	import os.path
 	if (os.path.isfile(sys.path[0] + "/vo/alpha/alpha.wav") == False):
 		print("Synthesis Failure: NO ALPHANUMERIC SUPPORT")
 		time.sleep(5)
