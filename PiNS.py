@@ -23,8 +23,6 @@ config = ConfigParser.ConfigParser()
 config.read(configFile)
 
 
-buzzer_number                 = config.getint('buzzer', 'times')
-monolith_on                   = config.getboolean('monolith', 'enabled')
 transmitter_binary            = config.get('transmitter', 'binary')
 repeat                        = True
 repeat_infinite               = config.getboolean('repeat', 'infinite')
