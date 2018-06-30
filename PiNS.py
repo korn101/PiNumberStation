@@ -57,6 +57,8 @@ alpha = ["alpha", "bravo", "charlie", "delta",  "echo", "foxtrot", "golf",
 def main():
 
 	print("PiNumberStation started...")
+	print("Load configuration from %s" % configFile)
+
 	print("Broadcast on " + str(freq))
 	'''
 	for x in range(0, len(message)):
