@@ -7,31 +7,39 @@ import wave
 import sys
 import random
 
-#from encryption import encrypt, decrypt
-#enable_encryption = False
-#encKey = 0
+import os.path
+import ConfigParser
 
-# Turn on buzzer:
-buzzer_number = 4
 
-monolith_on = False
+configFile = "default.ini"
+if (len(sys.argv) > 1):
+	# if arguments present
+	configFile = sys.argv[1]
 
-# Use "pifm" (works only with raspberry pi 1)
-# Use "fm_transmitter" (works on raspberry pi 2, and SHOULD be works pi 3 too)
-transmitter_binary = "fm_transmitter"
+	if not configFile.endswith(".ini"):
+		configFile = configFile + ".ini"
+
+config = ConfigParser.ConfigParser()
+config.read(configFile)
+
+
+transmitter_binary            = config.get('transmitter', 'binary')
+repeat                        = True
+repeat_infinite               = config.getboolean('repeat', 'infinite')
+repeat_counter                = config.getint('repeat', 'exit_after')
+repeat_interval_break_seconds = config.getint('repeat', 'delay')
+freq                          = config.get('general', 'freq')
+
+audio_prepend                 = config.get('audio', 'prepend')
+audio_append                  = config.get('audio', 'append')
+
 
 # Give the pifm extension executable rights.
 subprocess.call(["sudo", "chmod", "+x", transmitter_binary])
 
 # Message to synthesize and broadcast
 message = "123456789 abcdefghijklmnopqrstuvwxyz"
-# Would you like to repeat the message infinitely?
-repeat = True
-
-repeat_interval_break_seconds = 5
-
 loadFromFile = True
-freq = "10464.3" #default frequency, will change if run with arguments.
 
 # Sounds for digits/numbers.
 sounds = ["zero.wav", "one.wav", "two.wav", "three.wav", "four.wav", "five.wav", "six.wav", "seven.wav", "eight.wav", "nine.wav"]
@@ -44,21 +52,17 @@ alpha = ["alpha", "bravo", "charlie", "delta",  "echo", "foxtrot", "golf",
 		"whiskey", "x-ray", "yankee", "zulu"]
 
 
-if (len(sys.argv) > 1):
-	# if arguments present
-	freq = sys.argv[1]
-	print("Broadcast on " + str(freq))
-
-
 def main():
 
 	print("PiNumberStation started...")
+	print("Load configuration from %s" % configFile)
+
+	print("Broadcast on " + str(freq))
 	'''
 	for x in range(0, len(message)):
 		print(str(message[x]))
 	'''
 
-	import os.path
 	if (os.path.isfile(sys.path[0] + "/vo/alpha/alpha.wav") == False):
 		print("Synthesis Failure: NO ALPHANUMERIC SUPPORT")
 		time.sleep(5)
@@ -121,32 +125,37 @@ def constructWav( strMessage ):
 	'''
 
 	# determine infiles for message.
-	i=0
-	if buzzer_number > 0:
-		j=0
-		while (j < buzzer_number):
-			infiles.append(sys.path[0] +"/vo/misc/buzzer.wav")
-			j=j+1
-	else:
-		infiles.append(sys.path[0] + "/vo/_comma.wav")
 
-	infiles.append(sys.path[0] + "/vo/on3.wav")
+	for file in audio_prepend.split(","):
+		if not file[0] == "/" or not file[0] == ".":
+			file = sys.path[0] + "/" + file
 
-	if monolith_on == True:
-		infiles.append(sys.path[0] + "/vo/misc/monolith.wav")
+		if os.path.exists(file):
+			infiles.append(file)
+		else:
+			print  "File %s not exists ... skipped!" % file
 
 	for character in strMessageOut:
-		infiles.append(sys.path[0] + "/vo/" + getVO(character))
-		print(infiles[i+2])
-		i = i + 1
+		char_sound = sys.path[0] + "/vo/" + getVO(character)
+		infiles.append(char_sound)
+		print char_sound
+
+	for file in audio_append.split(","):
+		if not file[0] == "/" or not file[0] == ".":
+			file = sys.path[0] + "/" + file
+
+		if os.path.exists(file):
+			infiles.append(file)
+		else:
+			print  "File %s not exists ... skipped!" % file
+
+		infiles.append(file)
 
 	infiles.append(sys.path[0] + "/vo/off3.wav")
 
-	#infiles = ["sound_1.wav", "sound_2.wav"]
-
 	outfile = sys.path[0] + "/message.wav"
+	data    = []
 
-	data= []
 	for infile in infiles:
 	    w = wave.open(infile, 'rb')
 	    data.append( [w.getparams(), w.readframes(w.getnframes())] )
@@ -171,37 +180,26 @@ def constructWav( strMessage ):
 # START:
 main()
 
-if (loadFromFile == False):
-	constructWav(message)
-else:
-	constructWavFromFile("message.txt")
+while (True):
+	if (loadFromFile == False):
+		constructWav(message)
+	else:
+		constructWavFromFile("message.txt")
 
-if repeat == False:
+	print "Construction Complete.."
+
+	print "Playing ..."
 	playMessage()
-else:
-	loop = True if repeat == True else int(repeat)
 
-	while (loop):
+	if not repeat_infinite:
+		repeat_counter -= 1
 
-		if (loadFromFile == False):
-			constructWav(message)
-		else:
-			constructWavFromFile("message.txt")
-		print("Construction Complete..")
+		if repeat_counter <= 0:
+			break
 
-		print("\t Playing..")
-		playMessage()
-
-		if repeat_interval_break_seconds > 0:
-			print "Sleep ", repeat_interval_break_seconds, " secs ..."
-			time.sleep(repeat_interval_break_seconds)
-
-		if type(repeat) != type(True):
-			loop -= 1
-
-			if loop <= 0:
-				break
-
+	if repeat_interval_break_seconds > 0:
+		print "Sleep ", repeat_interval_break_seconds, " secs ..."
+		time.sleep(repeat_interval_break_seconds)
 
 #kill pifm because it doesn't kill itself, for some stupid reason.
 subprocess.call(["sudo", "killall", transmitter_binary])
