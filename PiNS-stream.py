@@ -9,7 +9,7 @@
 #
 # Configure:
 # 	- 1. (required) Setup icecast: edit ```/etc/icecast.xml```, ```/usr/local/etc/icecast.xml```
-#	- 2. (required) Run icecast: run ```icecast -c /usr/local/etc/icecast.xml)```
+#	- 2. (required) Run icecast: run ```icecast -c /usr/local/etc/icecast.xml -b```
 #	- 3. (optional) Setup message: edit ```default.ini``` section streaming
 #   - 4. (required) Setup liquidsoap config: edit ```streaming/config.liq``` with your host, and port (the same of icecast.xml)
 #   - 5. (optional) Setup trasmission: edit ```streaming/stream.liq```
