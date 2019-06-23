@@ -62,7 +62,7 @@ def constructWav( strMessage ):
 	for character in strMessageOut:
 		char_sound = sys.path[0] + "/vo/" + getVO(character)
 		infiles.append(char_sound)
-		print char_sound
+		print "\t %s => %s" % (character, getVO(character))
 
 	for file in config.get('streaming', 'append').split(","):
 		if not file[0] == "/" or not file[0] == ".":
