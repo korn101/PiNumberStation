@@ -123,14 +123,15 @@ def main():
 
 	config.read(configFile)
 
-	bin=config.get('streaming', 'binary')
-
 	#message=open("message.txt").read()
 	message=raw_input("Digita il messaggio\n")
 	enc_key=raw_input("Digita la chiave di crittografia o premi invio per una generata automaticamente\n")
 	if not enc_key:
 		for char in message:
-			enc_key=choice(range(0, 25))
+			enc_key=enc_key + str(choice(range(0, 25)))
+
+	print("Dectypt key:\n")
+	print(enc_key)
 
 	# see https://repl.it/@GeorgeHill1/Vernam-Cipher
 	enc_message=vernam(enc_key, message)
