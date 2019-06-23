@@ -16,8 +16,8 @@
 #
 # Usage:
 #
-# ./PiNS-stream.py --text "my message"
-# ./PiNS-stream.py --text "my message" --key "key for encrypt text with Vernam's Cipher"
+# ./PiNS-icecast.py --text "my message"
+# ./PiNS-icecast.py --text "my message" --key "key for encrypt text with Vernam's Cipher"
 #
 import sys
 import subprocess # for calling console

@@ -1,11 +1,10 @@
-#!/Users/mirkopapella/.opam/default/bin/liquidsoap -v
+#!/Users/mirkopapella/.opam/default/bin/liquidsoap --verbose
 %include "config.liq"
 
 # begin: config
 radio_station  = playlist("/Users/mirkopapella/Desktop/py-numberstation-v2/playlist.m3u")
 number_station = audio_to_stereo(single("/Users/mirkopapella/Desktop/py-numberstation-v2/PiNumberStation/message.wav"))
 radio_fallback = single("/Users/mirkopapella/Desktop/py-numberstation-v2/fail.mp3")
-
 
 # Schedule number station
 number_station_scheduled=switch([ 
@@ -17,12 +16,22 @@ number_station_scheduled=switch([
 ])
 # end: config
 
+# This function is called when
+# a new metadata block is passed in
+# the stream.
+def apply_metadata(m) =
+	title  = m["title"]
+	artist = m["artist"]
+  print("Now playing: #{title} by #{artist}")
+end
 
 radio = fallback(
 	track_sensitive=false, 
 	[radio_station, radio_fallback]
 )
 radio = add([radio, number_station_scheduled])
+radio = on_metadata(apply_metadata, radio)
+
 
 output.icecast(
 	%mp3(bitrate=256,samplerate=44100,stereo=true),
