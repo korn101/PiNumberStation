@@ -1,8 +1,5 @@
 #!/Users/mirkopapella/.opam/default/bin/liquidsoap -v
-set("log.file.path", "/Users/mirkopapella/Desktop/py-numberstation-v2/liquidsoap.log")
-set("log.file", false)
-set("log.stdout", true)
-set("log.level", 4)
+%include "config.liq"
 
 radio_station  = playlist("/Users/mirkopapella/Desktop/py-numberstation-v2/playlist.m3u")
 number_station = audio_to_stereo(single("/Users/mirkopapella/Desktop/py-numberstation-v2/PiNumberStation/message.wav"))
@@ -23,12 +20,12 @@ radio = add([radio, number_station_scheduled])
 
 output.icecast(
 	%mp3(bitrate=256,samplerate=44100,stereo=true),
-	name="Papella: number stations",
-	mount="radio",
-	url="http://radio17.mooo.com", 
-	host="radio17.mooo.com",
-	port=8888, 
-	password="papella",
+	name=stream_name,
+	mount=stream_mount,
+	url=icecast_url, 
+	host=icecast_host,
+	port=icecast_port, 
+	password=icecast_pass,
 	fallible=true,
 	icy_metadata="true",
 	radio
