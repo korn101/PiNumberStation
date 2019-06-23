@@ -1,4 +1,24 @@
 #!/usr/bin/python
+#
+# PiNumberStation over icecast 
+#
+# Requires:
+# 	- icecast 		 (https://icecast.org/download | brew install icecast)
+#	- liquidsoap 	 (https://www.liquidsoap.info/doc-dev/install.html)
+#	- liquidsoap-cry (liquidsoup plugin for stream to icecast)
+#
+# Configure:
+# 	- 1. (required) Setup icecast: edit ```/etc/icecast.xml```, ```/usr/local/etc/icecast.xml```
+#	- 2. (required) Run icecast: run ```icecast -c /usr/local/etc/icecast.xml)```
+#	- 3. (optional) Setup message: edit ```default.ini``` section streaming
+#   - 4. (required) Setup liquidsoap config: edit ```streaming/config.liq``` with your host, and port (the same of icecast.xml)
+#   - 5. (optional) Setup trasmission: edit ```streaming/stream.liq```
+#
+# Usage:
+#
+# ./PiNS-stream.py --text "my message"
+# ./PiNS-stream.py --text "my message" --key "key for encrypt text with Vernam's Cipher"
+#
 import sys
 import subprocess # for calling console
 import wave

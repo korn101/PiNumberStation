@@ -1,6 +1,7 @@
 #!/Users/mirkopapella/.opam/default/bin/liquidsoap -v
 %include "config.liq"
 
+# begin: config
 radio_station  = playlist("/Users/mirkopapella/Desktop/py-numberstation-v2/playlist.m3u")
 number_station = audio_to_stereo(single("/Users/mirkopapella/Desktop/py-numberstation-v2/PiNumberStation/message.wav"))
 radio_fallback = single("/Users/mirkopapella/Desktop/py-numberstation-v2/fail.mp3")
