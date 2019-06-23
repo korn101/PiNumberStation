@@ -5,6 +5,14 @@ import wave
 import os.path
 import ConfigParser
 from random import choice
+import argparse
+
+parser = argparse.ArgumentParser(prog="enc", add_help=True, description='Encrypt text with VernamCipher')
+parser.add_argument('--conf', '--config', '-c', metavar='config', default="default.ini", type=str, help='Config file')
+parser.add_argument('--text', '--string', '-t', metavar='text', default="hello", type=str, help='text to crypt')
+parser.add_argument('--key',  '--pass',   '-k', metavar='key', default="", type=str, help='Encrypt text with VernamCipher')
+args = parser.parse_args()
+
 
 config = ConfigParser.ConfigParser()
 # Sounds for digits/numbers.
