@@ -1,4 +1,14 @@
 #!/usr/bin/python
+import sys
+import argparse
+
+parser = argparse.ArgumentParser(prog="enc", add_help=True, description='Encrypt text with VernamCipher')
+
+parser.add_argument('--enc-text', '-s', metavar='enc_text', default="hello", type=str, help='text to crypt')
+parser.add_argument('--enc-key', '-k', metavar='enc_key', default="olleh", type=str, help='Encrypt key (should be the same lenght of text)')
+
+args = parser.parse_args()
+
 
 class VernamCipher:
 
@@ -41,21 +51,20 @@ class VernamCipher:
 
 		return enc
 
-# main
-message = raw_input("Write your message (only alpha-numerics): \n").upper()
-key     = raw_input("Write encrypt key (key >= message_len): \n").upper()
+if __name__ == "__main__":
+	message = args.enc_text if args.enc_text else raw_input("Write your message (only alpha-numerics): \n").upper()
+	key     = args.enc_key  if args.enc_key  else raw_input("Write encrypt key (key >= message_len): \n").upper()
 
-cipher = VernamCipher(key)
-text   = cipher.encode(message)
-print text
+	if key == "!":
+		key = ""
+		for char in message:
+			key=key + str(choice(range(0, 25)))
 
-confirm = raw_input("Save to message.txt? [Y/N]\n").lower()
-if confirm == "y":
-	try:
-		fd = open("message.txt", "w+")
-		fd.writelines(" ".join( [str(char) for char in text]) )
-		fd.close()
-		print "message.txt updated"
-	except Exception as e:
-		print e
-		pass
+	cipher = VernamCipher(key)
+	text   = cipher.encode(message)
+	str    = "".join( [str(char) for char in text])
+
+	print("Key = %s", key)
+	
+	sys.stdout.write( str + "\n" )
+	sys.exit(0)

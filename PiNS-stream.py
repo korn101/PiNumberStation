@@ -101,51 +101,20 @@ def constructWav( strMessage ):
 	return
 
 
-def vernam(key,message):
-    message = str(message)
-    m = message.upper().replace(" ","") # Convert to upper case, remove whitespace
-    encrypt = []
+if __name__ == "__main__":
+	config.read(args.conf)
 
-    try:
-        key = int(key)           # if the key value is not a number, then run with key = 0
-    except ValueError:
-        key = 0
-    for i in range(len(m)):
-        letter = ord(m[i])-65      # Letters now range 0-25
-        letter = (letter + key)%25 # Alphanumeric + key mod 25 = 0-25
-        letter +=65
-        
+	if len(args.key) > 0:
+		process=subprocess.Popen([sys.path[0] + "/encoder.py", "--enc-text", args.text, "--enc-key", args.key], stdout=subprocess.PIPE)
+		result=process.stdout.readlines()[-1]
+		print(result)
+		message=result.rstrip()
+	else:
+		message=args.text
 
-        encrypt.append(str(letter)) #chr(letter) # Concatenate message
-        
-    return "".join(encrypt)
 
-def main():
-	configFile = "default.ini"
-	if (len(sys.argv) > 1):
-		# if arguments present
-		configFile = sys.argv[1]
+	if not message:
+		raise Exception("Empty PiNumberStation message")
 
-		if not configFile.endswith(".ini"):
-			configFile = configFile + ".ini"
-
-	config.read(configFile)
-
-	#message=open("message.txt").read()
-	message=raw_input("Digita il messaggio\n")
-	enc_key=raw_input("Digita la chiave di crittografia o premi invio per una generata automaticamente\n")
-	if not enc_key:
-		for char in message:
-			enc_key=enc_key + str(choice(range(0, 25)))
-
-	print("Dectypt key:\n")
-	print(enc_key)
-
-	# see https://repl.it/@GeorgeHill1/Vernam-Cipher
-	enc_message=vernam(enc_key, message)
-	print(enc_message)
-
-	constructWav(enc_message)
+	constructWav(message)
 	subprocess.call([sys.path[0] + "/streaming/stream.liq"]);
-
-main()
