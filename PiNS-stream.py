@@ -91,11 +91,7 @@ def constructWav( strMessage ):
 	for x in range(0, len(infiles)):
 		output.writeframes(data[x][1])
 
-	#output.writeframes(data[0][1])
-	#output.writeframes(data[1][1])
-	#output.writeframes(data[2][1])
 	output.close()
-
 	print("Synthesis Complete..")
 
 	return
