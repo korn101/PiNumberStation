@@ -6,10 +6,15 @@ number_station = audio_to_stereo(single("/Users/mirkopapella/Desktop/py-numberst
 radio_fallback = single("/Users/mirkopapella/Desktop/py-numberstation-v2/fail.mp3")
 
 
+# Schedule number station
 number_station_scheduled=switch([ 
-	({ 0m-5m },   delay(5., number_station)),
-	({ 30m-35m }, delay(5., number_station))
+	({ 0m-5m },   amplify(6., number_station)),
+	({ 10m-15m }, amplify(6., number_station)),
+	({ 20m-25m }, amplify(6., number_station)),
+	({ 30m-35m }, amplify(6., number_station)),
+	({ 45m-55m }, amplify(6., number_station))
 ])
+# end: config
 
 
 radio = fallback(
