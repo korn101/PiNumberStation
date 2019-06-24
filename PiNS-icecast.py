@@ -133,4 +133,4 @@ if __name__ == "__main__":
 		raise Exception("Empty PiNumberStation message")
 
 	constructWav(message)
-	subprocess.call([sys.path[0] + "/streaming/stream.liq"]);
+	subprocess.call([sys.path[0] + "/streaming/icecast.liq"]);
