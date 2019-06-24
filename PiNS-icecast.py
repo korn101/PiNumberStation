@@ -102,7 +102,7 @@ def constructWav( strMessage ):
 
 	infiles.append(sys.path[0] + "/vo/off3.wav")
 
-	outfile = sys.path[0] + "/message.wav"
+	outfile = sys.path[0] + "/streaming/message.wav"
 	data    = []
 
 	for infile in infiles:
