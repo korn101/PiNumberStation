@@ -25,13 +25,18 @@ import wave
 import os.path
 import ConfigParser
 from random import choice
+from distutils.spawn import find_executable
+
 import argparse
+default_trasmission=sys.path[0] + "/streaming/default.liq"
 
 parser = argparse.ArgumentParser(prog="enc", add_help=True, description='Encrypt text with VernamCipher')
 parser.add_argument('--conf', '--config', '-c', metavar='config', default="default.ini", type=str, help='Config file')
 parser.add_argument('--text', '--string', '-t', metavar='text', default="hello", type=str, help='text to crypt')
 parser.add_argument('--key',  '--pass',   '-k', metavar='key', default="", type=str, help='Encrypt text with VernamCipher')
+parser.add_argument('--stream', '--trasmission', '-s', metavar="stream", type=str, default=default_trasmission, help="Your stream name")
 args = parser.parse_args()
+args.stream = args.stream if args.stream.endswith('.liq') else args.stream + ".liq"
 
 
 config = ConfigParser.ConfigParser()
@@ -116,6 +121,26 @@ def constructWav( strMessage ):
 
 	return
 
+def stream_message():
+	liquidsoap_bin = config.get('streaming', 'liquidsoap_bin').replace('"', '').strip()
+	liquidsoap_bin = os.path.expanduser(liquidsoap_bin)
+
+	if not find_executable(liquidsoap_bin):
+		raise Exception("%s not exists... edit your .ini (key streaming.liquidsoap_bin)" % liquidsoap_bin)
+
+
+	if not os.path.isabs(args.stream):
+		stream_cfg  = os.path.dirname(__file__) + "/streaming/" + args.stream
+
+	stream_cfg  = os.path.abspath(os.path.expanduser(stream_cfg))
+	stream_file = os.path.basename(stream_cfg)
+	stream_dir  = os.path.dirname(stream_cfg)
+
+	if not os.path.exists(stream_cfg):
+		raise Exception("%s not founded... (cp %s %s)" % ( stream_file, stream_dir + "/default.liq", stream_cfg))
+
+	print("Starting process: %s %s" % (liquidsoap_bin, stream_cfg))
+	subprocess.call([liquidsoap_bin, stream_cfg])
 
 if __name__ == "__main__":
 	config.read(args.conf)
@@ -133,4 +158,4 @@ if __name__ == "__main__":
 		raise Exception("Empty PiNumberStation message")
 
 	constructWav(message)
-	subprocess.call([sys.path[0] + "/streaming/icecast.liq"]);
+	stream_message()
