@@ -83,9 +83,9 @@ def getVO( character ):
 def constructWav( strMessage ):
 	print(">> Synthesizing Message..")
 
-	infiles = []
+	infiles       = []
 	strMessageOut = strMessage
-
+	dest          = os.path.dirname(args.stream)
 
 	# determine infiles for message.
 
@@ -116,7 +116,7 @@ def constructWav( strMessage ):
 
 	infiles.append(sys.path[0] + "/vo/off3.wav")
 
-	outfile = sys.path[0] + "/streaming/message.wav"
+	outfile = dest + "/message.wav"
 	data    = []
 
 	for infile in infiles:
@@ -124,6 +124,10 @@ def constructWav( strMessage ):
 	    data.append( [w.getparams(), w.readframes(w.getnframes())] )
 	    w.close()
 
+	if not os.path.exists(outfile):
+		f.open(outfile, 'w+')
+		f.close()
+		
 	output = wave.open(outfile, 'wb')
 	output.setparams(data[0][0])
 
