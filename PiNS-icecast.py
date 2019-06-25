@@ -40,6 +40,7 @@ import os.path
 import ConfigParser
 from random import choice
 from distutils.spawn import find_executable
+from string import ascii_letters
 
 import argparse
 default_trasmission=sys.path[0] + "/streaming/default/main.liq"
@@ -48,9 +49,12 @@ parser = argparse.ArgumentParser(prog="PiNS-icecast.py", add_help=True, descript
 parser.add_argument('--conf', '--config', '-c', metavar='config', default="default.ini", type=str, help='Config file')
 parser.add_argument('--text', '--string', '-t', metavar='text', default="hello", type=str, help='text to crypt')
 parser.add_argument('--key',  '--pass',   '-k', metavar='key', default="", type=str, help='Encrypt text with VernamCipher')
+parser.add_argument('--key-rand',  '--pass-rand',  metavar='key_random', const=True, nargs='?', default=False, type=bool, help='Encrypt text with VernamCipher')
 parser.add_argument('--stream', '--trasmission', '-s', metavar="stream", type=str, default=default_trasmission, help="Your stream name")
+
 args = parser.parse_args()
 args.stream = args.stream if args.stream.endswith('.liq') else args.stream + "/main.liq"
+args.key    = "".join([choice(ascii_letters).lower() for char in args.text]) if args.key_rand else args.key
 
 
 config = ConfigParser.ConfigParser()
