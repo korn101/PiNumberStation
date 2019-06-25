@@ -85,7 +85,6 @@ def constructWav( strMessage ):
 
 	infiles       = []
 	strMessageOut = strMessage
-	dest          = os.path.dirname(args.stream)
 
 	# determine infiles for message.
 
@@ -116,16 +115,24 @@ def constructWav( strMessage ):
 
 	infiles.append(sys.path[0] + "/vo/off3.wav")
 
-	outfile = dest + "/message.wav"
-	data    = []
+	if not os.path.isabs(args.stream):
+		stream_cfg  = os.path.dirname(__file__) + "/streaming/" + args.stream
 
+	data = []
 	for infile in infiles:
 	    w = wave.open(infile, 'rb')
 	    data.append( [w.getparams(), w.readframes(w.getnframes())] )
 	    w.close()
 
+
+	outfile = os.path.dirname(args.stream) + "/message.wav"
+	if not os.path.isabs(outfile):
+		outfile = os.path.dirname(__file__) + "/streaming/" + outfile
+
+	outfile = os.path.abspath(os.path.expanduser(outfile))
+	
 	if not os.path.exists(outfile):
-		f.open(outfile, 'w+')
+		f=open(outfile, 'w+')
 		f.close()
 		
 	output = wave.open(outfile, 'wb')
