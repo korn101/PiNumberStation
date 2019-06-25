@@ -1,3 +1,5 @@
+pwd="/Users/mirkopapella/Desktop/py-numberstation-v2/PiNumberStation/streaming/default"
+
 #################################################
 # LiquidSoap settings
 ##################################################
@@ -5,10 +7,7 @@ set("log.level", 3)
 set("log.stdout", true)
 
 set("log.file", false)
-set("log.file.path", "liquidsoap.log")   # filename or path/filene.log
-
-#directory=get_process_lines("pwd")[0]
-#print(directory)
+set("log.file.path", "#{pwd}/liquidsoap.log")
 
 #################################################
 # Icecast settings
@@ -37,13 +36,13 @@ stream_mount="radio"
 # NB: Use absolute path for single()
 ######################################
 # playlist to play 
-number_station_playlist = playlist("/Users/mirkopapella/Desktop/py-numberstation-v2/PiNumberStation/streaming/default/music/playlist.lst", reload=3600)
+number_station_playlist = playlist("#{pwd}/music/playlist.lst", reload=3600)
 
 # source fallback
-number_station_fallback = single("/Users/mirkopapella/Desktop/py-numberstation-v2/PiNumberStation/streaming/default/samples/fail.mp3")                   	
+number_station_fallback = single("#{pwd}/samples/fail.mp3")                   	
 
 # audio of message (wrap into audio_to_stereo() pls)
-number_station_message  = audio_to_stereo(single("message.wav"))   				    
+number_station_message  = audio_to_stereo(single("#{pwd}/message.wav"))   				    
 
 # Scheduling message
 # Syntax is 
