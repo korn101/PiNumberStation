@@ -37,9 +37,9 @@ stream_mount="radio"
 # NB: Use absolute path for single()
 ######################################
 # playlist to play 
-number_station_playlist = playlist("playlist.pls")                                      
+number_station_playlist = playlist("music/playlist.pls")                                      
 # source fallback
-number_station_fallback = single("/Users/mirkopapella/Desktop/py-numberstation-v2/PiNumberStation/streaming/fail.mp3")                   				           
+number_station_fallback = single("/Users/mirkopapella/Desktop/py-numberstation-v2/PiNumberStation/streaming/default/samples/fail.mp3")                   				           
 # audio of message (wrap into audio_to_stereo() pls)
 number_station_message  = audio_to_stereo(single("message.wav"))   				    
 
