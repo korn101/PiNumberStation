@@ -39,16 +39,16 @@ stream_mount="radio"
 number_station_playlist = playlist("#{pwd}/music/playlist.lst", reload=3600)
 
 # source fallback
-number_station_fallback = single("#{pwd}/samples/fail.mp3")                   	
+number_station_fallback = single("#{pwd}/samples/fail.mp3")
 
 # audio of message (wrap into audio_to_stereo() pls)
-number_station_message  = audio_to_stereo(single("#{pwd}/message.wav"))   				    
+number_station_message  = audio_to_stereo(single("#{pwd}/message.wav"))
 
 # Scheduling message
 # Syntax is 
 #	({ range }, source)
 # 
-# 00:00 -> 01:00   
+# 00:00 -> 01:00
 # 30:00 -> 31:00
 # 
 # See https://www.liquidsoap.info/doc-dev/language.html
