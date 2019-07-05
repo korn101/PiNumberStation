@@ -1,0 +1,11 @@
+.DS_Store
+*/
+!default/
+
+
+*/liquidsoap.log
+!*/music/background.mp3
+!*/samples/fail.mp3
+*/music/
+*/samples/*
+
