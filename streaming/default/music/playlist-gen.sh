@@ -8,7 +8,10 @@ if [[ $playlist == "" ]]; then
 	playlist="playlist"
 fi
 
-find $(pwd) -name '*.mp3' -or -name '*.ogg' -or -name '*.flac' > ${playlist}.lst
-files=$(cat "${playlist}.lst" | wc -l)
+find $(pwd) -type f \( -name '*.mp3' -or -name '*.ogg' -or -name '*.flac' \) | sort > "$playlist.lst"
 
+cat $playlist.lst | head -5
+echo "..."
+
+files=$(cat "$playlist.lst" | wc -l)
 echo "√ ${playlist}.lst updated (${files} files)"
