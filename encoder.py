@@ -1,70 +1,91 @@
 #!/usr/bin/python
 import sys
 import argparse
+from string import ascii_letters
+from random import choice
+
+import pprint
+try:
+	from itertools import zip_longest
+except Exception as e:
+	from itertools import izip_longest as zip_longest
 
 parser = argparse.ArgumentParser(prog="enc", add_help=True, description='Encrypt text with VernamCipher')
 
-parser.add_argument('--enc-text', '-s', metavar='enc_text', default="hello", type=str, help='text to crypt')
-parser.add_argument('--enc-key', '-k', metavar='enc_key', default="olleh", type=str, help='Encrypt key (should be the same lenght of text)')
-
-args = parser.parse_args()
+parser.add_argument('--method', default="encrypt", type=str)
+parser.add_argument('--text', '-s', metavar='text', default="hello", type=str, help="Message to encrypt/decrypt")
+parser.add_argument('--key',  '-k', metavar='key', default="", type=str, help="Encrypt/Decrypt key")
 
 
 class VernamCipher:
+	alphabet = list("abcdefghijklmnopqrstuvwxyz !,.")
 
-	def __init__(self, key):
-		self.characters = "/ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-		self.chars = list(self.characters)
-		self.key = key.upper()
+	def chunk(self, str, size):
+		seq = list(str)
+		x   = [iter(seq)] * size
+		l   = zip_longest(*x, fillvalue='0')
+		return [''.join(tups) for tups in l] 
 
-	def __charIndex(self, char):
-		index = self.characters.find(char)
 
-		if index < 0:
-			raise Exception("Char not allowed")
+	def encrypt(self, st, key):
+		if len(st) != len(key):
+			return "Text and Key have to be the same length."
 
-		return index
+		nText    = []
+		kText    = []
 
-	"""Encode message with self.key"""
-	def encode(self, message):
-		enc     = []
-		message = message.upper()
+		for i in range(len(st)):
+			nText.append(self.alphabet.index(st[i].lower()))
+			kText.append(self.alphabet.index(key[i].lower()))
 
-		# verificare message > key
-		if len(message) > len(key):
-			raise Exception("Key < message")
+		res = {"encode":"", "indexs":""}
+		for i in range(len(nText)):
+			index = (nText[i] + kText[i]) % len(self.alphabet)
+			res["encode"] += self.alphabet[index]
+			res["indexs"] += str(index)
 
-		pos = -1
-		for char in message:
-			pos += 1
+		return res;
 
-			try:
-				num_1 = self.__charIndex(char)
-				num_2 = self.__charIndex(self.key[pos])
-			except Exception as e:
-				num_1 = 0
-				num_2 = 0
-				pass
+	def decrypt(self, st, key):
+		if len(st) != len(key):
+			return "Text and Key have to be the same length."
 
-			char_sum = ( num_1 + num_2 ) % len(self.characters)
-			enc.append(char_sum)
+		alphabet = list("abcdefghijklmnopqrstuvwxyz")
+		nText = []
+		kText = []
 
-		return enc
+		for i in range(len(st)):
+			nText.append(self.alphabet.index(st[i].lower()))
+			kText.append(self.alphabet.index(key[i].lower()))
+		out = ""
+		for i in range(len(nText)):
+			op = (nText[i] - kText[i])
+			if op < 0:
+				x = len(self.alphabet) + op
+			else:
+				x = op % len(self.alphabet)
+			out += alphabet[x]
+		return out;
+
+
 
 if __name__ == "__main__":
-	message = args.enc_text if args.enc_text else raw_input("Write your message (only alpha-numerics): \n").upper()
-	key     = args.enc_key  if args.enc_key  else raw_input("Write encrypt key (key >= message_len): \n").upper()
+	args = parser.parse_args()
 
-	if key == "!":
-		key = ""
-		for char in message:
-			key=key + str(choice(range(0, 25)))
+	args.key = "".join([choice(ascii_letters).lower() for char in args.text]) if len(args.key) < 1 else args.key
 
-	cipher = VernamCipher(key)
-	text   = cipher.encode(message)
-	str    = "".join( [str(char) for char in text])
+	if len(args.key) < len(args.text):
+		raise Exception("Error: key MUST be same length of text")
 
-	print("Key = %s", key)
+	cipher = VernamCipher()
+
+	if (args.method == "encrypt"):		
+		res  = cipher.encrypt(args.text, args.key)
+		text = " ".join(cipher.chunk(res["indexs"], 5))
+	else:
+		text = cipher.decrypt(args.text, args.key)
+
+	print("key = %s" % args.key)
 	
-	sys.stdout.write( str + "\n" )
+	sys.stdout.write( text + "\n" )
 	sys.exit(0)
